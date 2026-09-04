@@ -123,20 +123,16 @@ Point your domain's A record at the VM, allow TCP 80/443 in the Security List, a
 
 Serv00.com is a genuinely free host — no card, no ads, no expiry, no spin-down — with persistent SSD (daily backups), SSH, and Node 22. Great fit when Oracle's signup friction isn't worth it. Limits: 512 MB RAM, 3 GB disk, EU servers, 3 TCP ports.
 
-1. Register at [serv00.com](https://www.serv00.com) and wait for activation (a few minutes to a day).
-2. SSH in with the host/port from your DevilWEB panel (if `bash` isn't your shell, switch to it in the panel). Confirm Node 22: `node22 -v`.
-3. In DevilWEB, **allocate a free TCP port** and note it (plus the public hostname it shows).
-4. Clone and run the bootstrap:
+The full walkthrough (registration → live site → ops → troubleshooting) is in [`deploy/serv00/CHECKLIST.md`](deploy/serv00/CHECKLIST.md). The whole deploy is one command:
 
 ```bash
+# 1. Register at serv00.com, wait for activation, SSH in (host/port in DevilWEB panel)
 git clone https://github.com/steamytooolz-commits/general-store.git ~/apps/general-store
 cd ~/apps/general-store
-PORT=<allocated-port> bash deploy/serv00/setup-serv00.sh
+bash deploy/serv00/setup-serv00.sh
 ```
 
-The script picks the Node 22 binary, writes the DB to `~/apps/general-store/data/store.db`, starts the store with `nohup`, and registers a **`@reboot` cron entry** so it comes back after server restarts.
-
-5. Visit the public address your panel shows for the port (e.g. `http://<user>.serv00.net:<port>`). Optionally map a free subdomain + Let's Encrypt cert in DevilWEB for a clean `https://` URL.
+The script auto-picks a free TCP port from your account's allocations, finds/installs Node 22, writes the DB to `~/apps/general-store/data/store.db`, starts the store with `nohup`, and registers a **`@reboot` cron entry** so it survives server restarts. Visit the public hostname your panel shows for the port (e.g. `http://<user>.serv00.net:<port>`); optionally map a free subdomain + Let's Encrypt cert for a clean `https://` URL.
 
 ```bash
 tail -f ~/apps/general-store/logs/store.log   # logs

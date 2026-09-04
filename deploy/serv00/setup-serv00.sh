@@ -7,29 +7,25 @@
 # survives restarts. This script assumes you are already SSH'd into your
 # Serv00 account as a normal (non-root) user and the repo is cloned.
 #
-# Before running:
+# Before running (see deploy/serv00/CHECKLIST.md for the full walkthrough):
 #   1. Register at https://www.serv00.com and wait for activation.
 #   2. SSH in using the host/port shown in your DevilWEB panel.
-#   3. In DevilWEB, allocate a free TCP port for the store (you get 3).
-#      Note the port AND the public hostname it gives you.
-#   4. Clone this repo, e.g.:  git clone https://github.com/steamytooolz-commits/general-store.git ~/apps/general-store
-#   5. Run:  PORT=<allocated-port> ./deploy/serv00/setup-serv00.sh
+#   3. Clone this repo, e.g.:  git clone https://github.com/steamytooolz-commits/general-store.git ~/apps/general-store
+#   4. Run one command:  bash deploy/serv00/setup-serv00.sh
 #
-# It finds a Node 22 binary (node22), falls back to installing one in ~/.node22
-# if missing, starts the store with nohup, and registers a @reboot cron entry
-# so the store comes back after server restarts.
+# The script auto-picks a free TCP port from your account's allocations
+# (override with PORT=1234), finds a Node 22 binary (node22) or installs one
+# in ~/.node22, starts the store with nohup, and registers a @reboot cron
+# entry so it comes back after server restarts.
 
 set -euo pipefail
 
 APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 LOG_DIR="$APP_DIR/logs"
 DB_DIR="$APP_DIR/data"
-PORT="${PORT:-3000}"
-HOSTNAME="$(hostname)"
 
 echo "==> General Store bootstrap on $(hostname)"
 echo "    app dir: $APP_DIR"
-echo "    port:    $PORT"
 
 if [ ! -f "$APP_DIR/package.json" ] || [ ! -d "$APP_DIR/src" ]; then
   echo "error: no General Store checkout found at $APP_DIR" >&2
@@ -66,6 +62,30 @@ echo "==> Using Node $("$NODE_BIN" --version) at $NODE_BIN"
   echo "error: this Node build lacks node:sqlite — need Node >= 22.5" >&2
   exit 1
 }
+
+# ---- 1b. Pick a free TCP port ------------------------------------------------
+# Prefer an allocated port from the account (devil tool), else a common default.
+pick_port() {
+  local candidates=() line tok p
+  if command -v devil >/dev/null 2>&1; then
+    while read -r line; do
+      for tok in $line; do
+        if [[ "$tok" =~ ^[0-9]{2,5}$ ]]; then candidates+=("$tok"); fi
+      done
+    done < <(devil port list 2>/dev/null || true)
+  fi
+  candidates+=(3000 8080 8000 43210)
+  for p in "${candidates[@]}"; do
+    if "$NODE_BIN" -e "const s=require('net').createServer();s.once('error',()=>process.exit(1));s.listen($p,'127.0.0.1',()=>s.close(()=>process.exit(0)))" 2>/dev/null; then
+      echo "$p"
+      return 0
+    fi
+  done
+  echo 3000
+}
+
+PORT="${PORT:-$(pick_port)}"
+echo "    port:    $PORT (override with PORT=<n> if needed)"
 
 # ---- 2. Data + log dirs ----------------------------------------------------
 mkdir -p "$LOG_DIR" "$DB_DIR"
