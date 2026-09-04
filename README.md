@@ -1,5 +1,7 @@
 # General Store
 
+[![CI](https://github.com/steamytooolz-commits/general-store/actions/workflows/ci.yml/badge.svg)](https://github.com/steamytooolz-commits/general-store/actions/workflows/ci.yml)
+
 A small, self-contained online store: a REST API plus a vanilla JS storefront, backed by a persistent SQLite database.
 
 **Zero dependencies** — the app uses only Node.js built-ins (`node:http`, `node:sqlite`, `node:test`), so there is nothing to install.
