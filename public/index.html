@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Store</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>General Store</h1>
+    <button id="cart-button" class="cart-button" type="button">
+      Cart <span id="cart-count" class="badge">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section id="products" class="product-grid" aria-live="polite"></section>
+  </main>
+
+  <div id="cart-overlay" class="overlay hidden">
+    <aside class="cart-panel" role="dialog" aria-label="Shopping cart">
+      <h2>Your cart</h2>
+      <ul id="cart-items" class="cart-items"></ul>
+      <p class="cart-total">Total: <span id="cart-total">$0.00</span></p>
+      <form id="checkout-form" class="checkout-form">
+        <input id="customer-name" type="text" placeholder="Your name" autocomplete="name" required />
+        <input id="customer-email" type="email" placeholder="Your email" autocomplete="email" required />
+        <button type="submit" class="primary">Place order</button>
+      </form>
+      <p id="checkout-message" class="checkout-message"></p>
+      <button id="close-cart" class="close-cart" type="button">Close</button>
+    </aside>
+  </div>
+
+  <div id="confirmation" class="confirmation hidden"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

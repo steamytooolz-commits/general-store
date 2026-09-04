@@ -1,0 +1,15 @@
+{
+  "name": "online-store",
+  "version": "1.0.0",
+  "description": "A self-contained online store with zero dependencies: Node http + built-in SQLite",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node --experimental-sqlite src/server.js",
+    "dev": "node --watch --experimental-sqlite src/server.js",
+    "test": "node --experimental-sqlite --test"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
