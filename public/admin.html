@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · General Store</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/">General<em>Store</em></a>
+      <div class="header-actions"><div id="site-nav"></div></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1>Admin console</h1>
+        <p class="sub" id="page-sub">Store performance and administration.</p>
+      </div>
+    </div>
+
+    <div class="dash-layout">
+      <aside class="side-tabs" id="side-tabs">
+        <button data-tab="overview" class="active">📈 Overview</button>
+        <button data-tab="orders">📦 Orders</button>
+        <button data-tab="products">🗃️ Products</button>
+        <button data-tab="categories">🏷️ Categories</button>
+        <button data-tab="users">👥 Users</button>
+      </aside>
+
+      <div>
+        <section id="panel-overview" class="dash-panel active"></section>
+        <section id="panel-orders" class="dash-panel"></section>
+        <section id="panel-products" class="dash-panel"></section>
+        <section id="panel-categories" class="dash-panel"></section>
+        <section id="panel-users" class="dash-panel"></section>
+      </div>
+    </div>
+  </main>
+
+  <div id="order-modal" class="overlay center hidden"><div id="order-detail" class="modal wide"></div></div>
+  <div id="product-modal" class="overlay center hidden"><div id="product-editor" class="modal"></div></div>
+  <div id="cat-modal" class="overlay center hidden"><div id="cat-editor" class="modal"></div></div>
+
+  <script type="module" src="/auth.js"></script>
+  <script type="module" src="/admin.js"></script>
+</body>
+</html>

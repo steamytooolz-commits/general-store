@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account · General Store</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/">General<em>Store</em></a>
+      <div class="header-actions"><div id="site-nav"></div></div>
+    </div>
+  </header>
+
+  <main>
+    <div id="auth-view" class="auth-shell hidden">
+      <div class="auth-card">
+        <div class="auth-tabs" role="tablist">
+          <button id="tab-login" class="active" type="button">Sign in</button>
+          <button id="tab-register" type="button">Create account</button>
+        </div>
+        <div id="auth-form"></div>
+      </div>
+    </div>
+
+    <div id="dash-view" class="container hidden">
+      <div class="page-head">
+        <div>
+          <h1 id="dash-name"></h1>
+          <p id="dash-sub" class="sub"></p>
+        </div>
+        <div id="dash-actions"></div>
+      </div>
+
+      <section class="panel-card">
+        <h2>My orders</h2>
+        <p class="sub">Track, review, and cancel orders you’ve placed.</p>
+        <div id="orders-list" class="table-wrap"></div>
+      </section>
+
+      <section class="panel-card">
+        <h2>Profile</h2>
+        <p class="sub">Update your contact details and password.</p>
+        <div id="profile-form"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Order detail modal -->
+  <div id="order-modal" class="overlay center hidden">
+    <div id="order-detail" class="modal wide"></div>
+  </div>
+
+  <script type="module" src="/auth.js"></script>
+  <script type="module" src="/account.js"></script>
+</body>
+</html>

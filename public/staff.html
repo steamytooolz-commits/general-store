@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Desk · General Store</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/">General<em>Store</em></a>
+      <div class="header-actions"><div id="site-nav"></div></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <h1>Staff desk</h1>
+        <p class="sub" id="page-sub">Orders and inventory management.</p>
+      </div>
+    </div>
+
+    <div class="dash-layout">
+      <aside class="side-tabs" id="side-tabs">
+        <button data-tab="orders" class="active">📦 Orders</button>
+        <button data-tab="inventory">🗃️ Inventory</button>
+      </aside>
+
+      <div>
+        <section id="panel-orders" class="dash-panel active"></section>
+        <section id="panel-inventory" class="dash-panel"></section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Order detail modal -->
+  <div id="order-modal" class="overlay center hidden">
+    <div id="order-detail" class="modal wide"></div>
+  </div>
+
+  <!-- Product editor modal -->
+  <div id="product-modal" class="overlay center hidden">
+    <div id="product-editor" class="modal"></div>
+  </div>
+
+  <script type="module" src="/auth.js"></script>
+  <script type="module" src="/staff.js"></script>
+</body>
+</html>

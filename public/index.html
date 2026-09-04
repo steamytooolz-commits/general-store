@@ -8,33 +8,61 @@
 </head>
 <body>
   <header class="site-header">
-    <h1>General Store</h1>
-    <button id="cart-button" class="cart-button" type="button">
-      Cart <span id="cart-count" class="badge">0</span>
-    </button>
+    <div class="header-inner">
+      <a class="brand" href="/">General<em>Store</em></a>
+      <form id="search-form" class="search" role="search">
+        <input id="search-input" type="text" placeholder="Search products…" autocomplete="off" />
+      </form>
+      <div class="header-actions">
+        <div id="site-nav"></div>
+        <button id="cart-button" class="cart-button" type="button">
+          Cart <span id="cart-count" class="badge-count">0</span>
+        </button>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <section id="products" class="product-grid" aria-live="polite"></section>
+  <nav id="category-bar" class="category-bar" aria-label="Categories"></nav>
+
+  <main class="store-main">
+    <div class="container">
+      <div class="page-head">
+        <div>
+          <h1 id="heading">All products</h1>
+          <p id="heading-sub" class="sub"></p>
+        </div>
+        <select id="sort-select" aria-label="Sort products">
+          <option value="newest">Newest first</option>
+          <option value="price_asc">Price: low to high</option>
+          <option value="price_desc">Price: high to low</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+      <section id="products" class="product-grid" aria-live="polite"></section>
+      <div id="empty-state" class="empty-state hidden">
+        <div class="big">🔍</div>
+        <h2>Nothing found</h2>
+        <p class="muted">Try a different search term or category.</p>
+      </div>
+    </div>
   </main>
 
-  <div id="cart-overlay" class="overlay hidden">
-    <aside class="cart-panel" role="dialog" aria-label="Shopping cart">
-      <h2>Your cart</h2>
-      <ul id="cart-items" class="cart-items"></ul>
-      <p class="cart-total">Total: <span id="cart-total">$0.00</span></p>
-      <form id="checkout-form" class="checkout-form">
-        <input id="customer-name" type="text" placeholder="Your name" autocomplete="name" required />
-        <input id="customer-email" type="email" placeholder="Your email" autocomplete="email" required />
-        <button type="submit" class="primary">Place order</button>
-      </form>
-      <p id="checkout-message" class="checkout-message"></p>
-      <button id="close-cart" class="close-cart" type="button">Close</button>
-    </aside>
+  <!-- Product detail modal -->
+  <div id="product-modal" class="overlay center hidden">
+    <div id="product-detail" class="modal wide"></div>
   </div>
 
-  <div id="confirmation" class="confirmation hidden"></div>
+  <!-- Cart drawer -->
+  <div id="cart-overlay" class="overlay right hidden">
+    <aside id="cart-panel" class="drawer" role="dialog" aria-label="Shopping cart"></aside>
+  </div>
 
-  <script src="/app.js"></script>
+  <!-- Order confirmation -->
+  <div id="confirm-overlay" class="overlay center hidden">
+    <div id="confirm-box" class="modal"></div>
+  </div>
+
+  <script type="module" src="/auth.js"></script>
+  <script type="module" src="/app.js"></script>
 </body>
 </html>
