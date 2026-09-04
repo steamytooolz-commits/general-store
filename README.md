@@ -119,6 +119,33 @@ sudo systemctl reload caddy
 
 Point your domain's A record at the VM, allow TCP 80/443 in the Security List, and Caddy fetches a free TLS certificate automatically. *(Older guide step: if you previously cloned under `~/`, move it to `/opt` so the service user can read it.)*
 
+## Deploy: Serv00 (free forever, no credit card)
+
+Serv00.com is a genuinely free host — no card, no ads, no expiry, no spin-down — with persistent SSD (daily backups), SSH, and Node 22. Great fit when Oracle's signup friction isn't worth it. Limits: 512 MB RAM, 3 GB disk, EU servers, 3 TCP ports.
+
+1. Register at [serv00.com](https://www.serv00.com) and wait for activation (a few minutes to a day).
+2. SSH in with the host/port from your DevilWEB panel (if `bash` isn't your shell, switch to it in the panel). Confirm Node 22: `node22 -v`.
+3. In DevilWEB, **allocate a free TCP port** and note it (plus the public hostname it shows).
+4. Clone and run the bootstrap:
+
+```bash
+git clone https://github.com/steamytooolz-commits/general-store.git ~/apps/general-store
+cd ~/apps/general-store
+PORT=<allocated-port> bash deploy/serv00/setup-serv00.sh
+```
+
+The script picks the Node 22 binary, writes the DB to `~/apps/general-store/data/store.db`, starts the store with `nohup`, and registers a **`@reboot` cron entry** so it comes back after server restarts.
+
+5. Visit the public address your panel shows for the port (e.g. `http://<user>.serv00.net:<port>`). Optionally map a free subdomain + Let's Encrypt cert in DevilWEB for a clean `https://` URL.
+
+```bash
+tail -f ~/apps/general-store/logs/store.log   # logs
+~/apps/general-store/start.sh                  # restart
+cd ~/apps/general-store && git pull && ./start.sh   # update app
+```
+
+**Choosing between the two free paths:** Serv00 wins on speed and zero friction (no card at all, live in minutes); Oracle Always Free wins on horsepower (4 OCPU/24 GB vs 512 MB) if you need headroom or expect real traffic.
+
 ## Configuration
 
 | Variable  | Default         | Description          |
