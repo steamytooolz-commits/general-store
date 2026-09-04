@@ -68,6 +68,57 @@ npm test           # or: node --experimental-sqlite --test
 | CRUD | `/api/admin/categories` | Admin |
 | GET/PATCH | `/api/admin/users` | Admin |
 
+## Deploy: Oracle Cloud Always Free (durable, $0)
+
+A free-tier PaaS can't keep a SQLite *file* alive across restarts — free web services run on ephemeral disks. Oracle's Always Free VM is the route that keeps your data durable for $0: a real machine with a persistent disk. Since this app has zero dependencies, deployment is just Node + the repo.
+
+### 1. Create the VM (web console)
+
+1. Sign in at [cloud.oracle.com](https://cloud.oracle.com) → *Compute → Instances → Create instance*.
+2. Image: **Ubuntu 24.04** (or 22.04). Shape: **Ampere A1 / ARM** (Always Free allotment: 4 OCPU + 24 GB RAM).
+3. Add your SSH public key, then **Create**. Note the instance's public IP.
+4. Boot volume: keep the default size (~47 GB) — it sits inside the Always Free 200 GB block-storage allotment and is persistent.
+
+### 2. SSH in and install
+
+```bash
+ssh ubuntu@<public-ip>
+sudo -i
+apt-get update && apt-get install -y git
+cd /opt
+git clone https://github.com/steamytooolz-commits/general-store.git
+cd /opt/general-store
+./deploy/oracle/setup-oracle.sh
+```
+
+The script installs Node 22, creates a `store` user, and registers a systemd service that **starts on boot and restarts on crash** (your `data` never lives in the repo — it's written to `/var/lib/general-store/store.db`).
+
+### 3. Open the port
+
+Oracle Cloud console → *Networking → Virtual Cloud Networks → your VCN → Security Lists → Default Security List* → **Add Ingress Rule**: source `0.0.0.0/0`, destination port `3000`, TCP. Then open `http://<public-ip>:3000`.
+
+### 4. Daily ops
+
+```bash
+sudo systemctl status general-store     # health
+sudo journalctl -u general-store -f     # live logs
+sudo systemctl restart general-store    # after config changes
+cd /opt/general-store && sudo git pull && sudo chown -R store:store /opt/general-store   # update app
+```
+
+### Optional: HTTPS with a domain (Caddy auto-TLS)
+
+```bash
+sudo apt-get install -y caddy
+# /etc/caddy/Caddyfile:
+#   store.example.com {
+#       reverse_proxy 127.0.0.1:3000
+#   }
+sudo systemctl reload caddy
+```
+
+Point your domain's A record at the VM, allow TCP 80/443 in the Security List, and Caddy fetches a free TLS certificate automatically. *(Older guide step: if you previously cloned under `~/`, move it to `/opt` so the service user can read it.)*
+
 ## Configuration
 
 | Variable  | Default         | Description          |

@@ -1,0 +1,31 @@
+# Reference unit — setup-oracle.sh generates the live copy at
+# /etc/systemd/system/general-store.service with your actual paths.
+#
+# The store runs as a dedicated user, keeps its SQLite database outside the
+# repo (/var/lib/general-store/store.db), restarts on crash, and starts on
+# boot — so orders survive restarts and VM reboots.
+
+[Unit]
+Description=General Store — online store
+Documentation=https://github.com/steamytooolz-commits/general-store
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=store
+Group=store
+WorkingDirectory=/opt/general-store
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=DB_PATH=/var/lib/general-store/store.db
+ExecStart=/usr/bin/node --experimental-sqlite src/server.js
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/general-store
+
+[Install]
+WantedBy=multi-user.target
